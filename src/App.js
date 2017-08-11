@@ -18,30 +18,27 @@ const after = [
   [0, 0, 0, 0, 0],
 ];
 
-class Cell extends Component {
-  render() {
-      // const { revealed } = this.state;
-      // const { value } = this.props;
+const Cell = ({ handleClick }) => (
+  <span
+    style={{ width: '20px', height: '20px', border: '1px solid'}}
+    onClick={handleClick}>
+  </span>
+);
 
-      return (
-        <span onClick={this.props.handleClick}></span>
-      );
-  }
-}
 
-const Field = ({ field }) => (
+const Field = ({ field, handleClick }) => (
   <div>
-   { field.map((row, y) => (
-    <div>
-      {
-        row.map((value, x) => (
-          <Cell value={value} onClick={() => {
-            this.props.handleClick(x, y)
-          }} />
-        ))
-      }
-    </div>
-  )) }
+    {
+      field.map((row, y) => (
+        <div style={{ display: 'flex', flexWrap: 'wrap'}}>
+          {
+            row.map((value, x) => (
+              <Cell value={value} handleClick={() => handleClick(x, y)} />
+            ))
+          }
+        </div>
+      ))
+    }
   </div>
 );
 
@@ -58,7 +55,7 @@ class Game extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick({ x, y }) {
+  handleClick(x, y) {
     console.log('x,y', x, y);
     // this.setState({
     //
@@ -68,7 +65,7 @@ class Game extends Component {
   render() {
     return (
       <div>
-        <Field field={this.state.current} onClick={this.handleClick} />
+        <Field field={this.state.current} handleClick={this.handleClick} />
       </div>
     );
   }
