@@ -9,11 +9,11 @@ import { reducer } from './ducks/minesweeper';
 const store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 const field = [
-  [ 1,  1,  1, 0, 0 ],
-  [ 1, -1,  2, 1, 0 ],
-  [ 1,  2, -1, 1, 0 ],
-  [ 0,  1,  1, 1, 0 ],
-  [ 0,  0,  0, 0, 0 ],
+  [ -1,  2,  1, 0, 0 ],
+  [  2, -1,  2, 1, 0 ],
+  [  1,  2, -1, 1, 0 ],
+  [  0,  1,  1, 1, 0 ],
+  [  0,  0,  0, 0, 0 ],
 ];
 
 ReactDOM.render(
