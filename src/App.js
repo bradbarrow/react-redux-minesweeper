@@ -18,10 +18,11 @@ const after = [
   [0, 0, 0, 0, 0],
 ];
 
-const Cell = ({ handleClick }) => (
+const Cell = ({ handleClick, value }) => (
   <span
     style={{ width: '20px', height: '20px', border: '1px solid'}}
     onClick={handleClick}>
+    {value}
   </span>
 );
 
