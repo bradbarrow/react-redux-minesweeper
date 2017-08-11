@@ -26,7 +26,6 @@ const Cell = ({ handleClick, value }) => (
   </span>
 );
 
-
 const Field = ({ field, handleClick }) => (
   <div>
     {
@@ -57,10 +56,16 @@ class Game extends Component {
   }
 
   handleClick(x, y) {
+    const { after, current } = this.state;
+    const afterCell = after[x][y];
+    const newCurrent = current.slice();
+    newCurrent[y][x] = afterCell;
+
     console.log('x,y', x, y);
-    // this.setState({
-    //
-    // })
+
+    this.setState({
+      current: newCurrent,
+    });
   }
 
   render() {
