@@ -10,15 +10,40 @@ const field = [
   [0, 0, 0, 0, 0],
 ];
 
+class Cell extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      revealed: false,
+    };
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    this.setState({
+      revealed: true,
+    });
+  }
+
+  render() {
+      const { revealed } = this.state;
+      const { value } = this.props;
+
+      return (
+        <span onClick={this.handleClick}>{ revealed ? value : '?' }</span>
+      );
+  }
+}
+
 const Field = ({ field }) => (
   <div>
    { field.map(row => (
     <div>
       {
         row.map(value => (
-          <span>
-            { value }
-          </span>
+          <Cell value={value} />
         ))
       }
     </div>
