@@ -1,80 +1,76 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { connect } from 'react-redux';
+import * as Minesweeper from './ducks/minesweeper';
 
-const before = [
-  ['?', '?', '?', '?', '?'],
-  ['?', '?', '?', '?', '?'],
-  ['?', '?', '?', '?', '?'],
-  ['?', '?', '?', '?', '?'],
-  ['?', '?', '?', '?', '?'],
-];
+const styles = {
+  row: { display: 'flex', flexWrap: 'wrap' },
+  cell: {
+    width: '50px',
+    height: '50px',
+    background: 'whitesmoke',
+    margin: '2px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+};
 
-const after = [
-  [1, 1, 1, 0, 0],
-  [1, -1, 2, 1, 0],
-  [1, 2, -1, 1, 0],
-  [0, 1, 1, 1, 0],
-  [0, 0, 0, 0, 0],
-];
+const Cell = connect(
+  (s,p) => {
+    const { revealed, value } = s.field[p.row][p.col];
+    return { revealed, value };
+  },
+  { handleClick: Minesweeper.revealCell },
+)(({ row, col, handleClick, revealed, value }) => (
+  <div
+    style={styles.cell}
+    onClick={() => handleClick(row, col)}
+  >
+    { revealed && value }
+  </div>
+));
 
-const Cell = ({ handleClick, value }) => (
-  <span
-    style={{ width: '20px', height: '20px', border: '1px solid'}}
-    onClick={handleClick}>
-    {value}
-  </span>
-);
-
-const Field = ({ field, handleClick }) => (
+const Field = connect(
+  s => ({ rows: s.field }),
+)(({ rows }) => (
   <div>
     {
-      field.map((row, y) => (
-        <div style={{ display: 'flex', flexWrap: 'wrap'}}>
+      rows.map((cols, row) => (
+        <div style={styles.row}>
           {
-            row.map((value, x) => (
-              <Cell value={value} handleClick={() => handleClick(x, y)} />
+            cols.map((cell, col) => (
+              <Cell row={row} col={col}/>
             ))
           }
         </div>
       ))
     }
   </div>
-);
+));
 
 class Game extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      before: before,
-      after: after,
-      current: before,
-    }
-
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick(x, y) {
-    const { after, current } = this.state;
-    const afterCell = after[x][y];
-    const newCurrent = current.slice();
-    newCurrent[y][x] = afterCell;
-
-    console.log('x,y', x, y);
-
-    this.setState({
-      current: newCurrent,
-    });
+  componentDidMount() {
+    this.props.init(this.props.field);
   }
 
   render() {
+    const { won, lost } = this.props;
+
     return (
       <div>
-        <Field field={this.state.current} handleClick={this.handleClick} />
+        <Field />
+
+        { lost && <span>You lose 💥</span> }
+        { won && <span>You win 🏆</span> }
       </div>
     );
   }
 }
 
-export default Game;
+export default connect(
+  s => ({
+    won: s.won,
+    lost: s.lost,
+  }),
+  { init: Minesweeper.initialiseField }
+)(Game);
